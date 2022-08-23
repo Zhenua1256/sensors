@@ -21,7 +21,7 @@ for viewer: username viewer, password viewer
 ```
 
 
-## Get all sensors
+## Get all sensors ( for all authorized users )
 
 **/sensors**  
 
@@ -31,7 +31,7 @@ Params: -
 
 Returns: list sensors
 
-## Get one sensor by id
+## Get one sensor by id ( only for user with role 'ADMIN' )
 
 **/sensor/{id}**
 
@@ -55,7 +55,7 @@ Returns: sensorDto  - object with needs field, for example:
 }
 ```
 
-## Create new sensor
+## Create new sensor  ( only for user with role 'ADMIN' )
 
 **/sensor**  
 
@@ -78,7 +78,7 @@ Params: body SensorCreate for example:
 
 Returns: sensorDto  - object with all fields
 
-## Update sensor
+## Update sensor  ( only for user with role 'ADMIN' )
 
 **/sensor**  
 
@@ -102,7 +102,7 @@ Params: body SensorUpdate for example:
 
 Returns: sensorDto  - object with all changes fields
 
-## Delete sensor
+## Delete sensor  ( only for user with role 'ADMIN' )
 
 **/sensor/{id}**  
 
