@@ -26,29 +26,29 @@ public class SensorController {
 
   @GetMapping(value = "/sensors")
   @PreAuthorize("hasAnyRole('ADMIN', 'VIEWER')")
-  public Page<Sensor> getAll(Pageable pageable, @RequestParam(value = "search") String[] search) {
+  public Page<Sensor> getAll(Pageable pageable, @RequestParam(value = "search", required = false) String[] search) {
     return sensorService.getAll(pageable, search);
   }
 
-  @DeleteMapping(value = "sensor/{id}")
+  @DeleteMapping(value = "/sensors/{id}")
   @PreAuthorize("hasRole('ADMIN')")
   public Long delete(@PathVariable Long id) {
     return sensorService.delete(id);
   }
 
-  @PostMapping(value = "sensor")
+  @PostMapping(value = "/sensors")
   @PreAuthorize("hasRole('ADMIN')")
   public SensorDto create(@RequestBody SensorCreate sensorCreate) {
     return sensorService.create(sensorCreate);
   }
 
-  @PutMapping(value = "sensor")
+  @PutMapping(value = "/sensors")
   @PreAuthorize("hasRole('ADMIN')")
   public SensorDto update(@RequestBody SensorUpdate sensorUpdate) {
     return sensorService.update(sensorUpdate);
   }
 
-  @GetMapping(value = "/sensor/{id}")
+  @GetMapping(value = "/sensors/{id}")
   @PreAuthorize("hasRole('ADMIN')")
   public SensorDto getById(@PathVariable Long id) {
     return sensorService.getById(id);

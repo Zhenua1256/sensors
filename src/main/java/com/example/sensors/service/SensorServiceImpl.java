@@ -24,22 +24,27 @@ public class SensorServiceImpl implements SensorService {
 
   private final SensorRepository sensorRepository;
   private final SensorMapper sensorMapper;
+  private static final String REGEX = "(\\w+?)(:|<|>)(\\w+?),";
 
   @Override
   public Page<Sensor> getAll(Pageable pageable, String[] search) {
-    SensorSpecificationsBuilder builder = new SensorSpecificationsBuilder();
-    Pattern pattern = Pattern.compile("(\\w+?)(:|<|>)(\\w+?),");
-    List<Matcher> list = Arrays.stream(search)
-        .map(search1 -> pattern.matcher(search1 + ","))
-        .collect(Collectors.toList());
-    list.forEach(matcher -> {
-      while (matcher.find()) {
-        builder.with(matcher.group(1), matcher.group(2), matcher.group(3));
-      }
-    });
-    Specification<Sensor> spec = builder.build();
+    return sensorRepository.findAll(getSpecification(search), pageable);
+  }
 
-    return sensorRepository.findAll(spec, pageable);
+  private Specification<Sensor> getSpecification(String[] search) {
+    SensorSpecificationsBuilder builder = new SensorSpecificationsBuilder();
+    Pattern pattern = Pattern.compile(REGEX);
+    if (search != null) {
+      List<Matcher> list = Arrays.stream(search)
+          .map(search1 -> pattern.matcher(search1 + ","))
+          .collect(Collectors.toList());
+      list.forEach(matcher -> {
+        while (matcher.find()) {
+          builder.with(matcher.group(1), matcher.group(2), matcher.group(3));
+        }
+      });
+      return builder.build();
+    } else return null;
   }
 
   @Override
@@ -60,6 +65,8 @@ public class SensorServiceImpl implements SensorService {
 
   @Override
   public SensorDto getById(Long id) {
-    return sensorRepository.findById(id).map(sensorMapper::mapToDto).orElse(null);
+    return sensorRepository.findById(id)
+        .map(sensorMapper::mapToDto)
+        .orElse(null);
   }
 }

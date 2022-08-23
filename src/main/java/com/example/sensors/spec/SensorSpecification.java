@@ -19,26 +19,25 @@ public class SensorSpecification implements Specification<Sensor> {
   public Predicate toPredicate
       (Root<Sensor> root, CriteriaQuery<?> query, CriteriaBuilder builder) {
 
-    if (criteria.getOperation().equalsIgnoreCase(">")) {
-      return builder.greaterThanOrEqualTo(
-          root.get(criteria.getKey()), criteria.getValue().toString());
-    } else if (criteria.getOperation().equalsIgnoreCase("<")) {
-      return builder.lessThanOrEqualTo(
-          root.get(criteria.getKey()), criteria.getValue().toString());
-    } else if (criteria.getOperation().equalsIgnoreCase(":")) {
-      if (root.get(criteria.getKey()).getJavaType() == String.class) {
-        return builder.like(
-            root.get(criteria.getKey()), "%" + criteria.getValue() + "%");
-      } else if (root.get(criteria.getKey()).getJavaType() == SensorUnit.class) {
-        return builder.equal(root.get(criteria.getKey()),
-            SensorUnit.valueOf(criteria.getValue().toString()));
-      } else if (root.get(criteria.getKey()).getJavaType() == SensorType.class) {
-        return builder.equal(root.get(criteria.getKey()),
-            SensorType.valueOf(criteria.getValue().toString()));
-      } else {
-        return builder.equal(root.get(criteria.getKey()), criteria.getValue());
-      }
+    switch (criteria.getOperation()) {
+      case ">":
+        return builder.greaterThanOrEqualTo(
+            root.get(criteria.getKey()), criteria.getValue().toString());
+      case "<":
+        return builder.lessThanOrEqualTo(
+            root.get(criteria.getKey()), criteria.getValue().toString());
+      case ":":
+        if (root.get(criteria.getKey()).getJavaType() == String.class) {
+          return builder.like(
+              root.get(criteria.getKey()), "%" + criteria.getValue() + "%");
+        } else if (root.get(criteria.getKey()).getJavaType() == SensorUnit.class) {
+          return builder.equal(root.get(criteria.getKey()),
+              SensorUnit.valueOf(criteria.getValue().toString()));
+        } else if (root.get(criteria.getKey()).getJavaType() == SensorType.class) {
+          return builder.equal(root.get(criteria.getKey()),
+              SensorType.valueOf(criteria.getValue().toString()));
+        }
+      default: return builder.equal(root.get(criteria.getKey()), criteria.getValue());
     }
-    return null;
   }
 }
