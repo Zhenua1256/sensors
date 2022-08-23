@@ -1,5 +1,6 @@
 package com.example.sensors.config;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -17,19 +18,31 @@ import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
+  @Value("${credential.admin.username}")
+  private String usernameAdmin;
+
+  @Value("${credential.admin.password}")
+  private String passwordAdmin;
+
+  @Value("${credential.viewer.password}")
+  private String passwordViewer;
+
+  @Value("${credential.viewer.username}")
+  private String usernameViewer;
+
   @Bean
   @Override
   protected UserDetailsService userDetailsService() {
     return new InMemoryUserDetailsManager(
         User.builder()
-            .username("admin")
-            .password(passwordEncoder().encode("admin"))
+            .username(usernameAdmin)
+            .password(passwordEncoder().encode(passwordAdmin))
             .roles("ADMIN")
             .build(),
 
         User.builder()
-            .username("viewer")
-            .password(passwordEncoder().encode("viewer"))
+            .username(usernameViewer)
+            .password(passwordEncoder().encode(passwordViewer))
             .roles("VIEWER")
             .build()
     );
